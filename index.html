@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="The ultimate todo application — organize your life with priorities, projects, tags, Pomodoro timer, analytics, and more." />
+    <title>Todo — Ultimate Productivity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- ====== SIDEBAR ====== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar__top">
+            <div class="sidebar__logo">
+                <span class="logo-icon">✓</span>
+                <span class="logo-text">Todo</span>
+            </div>
+            <button class="sidebar__collapse-btn" id="sidebar-toggle" aria-label="Toggle sidebar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round">
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Views -->
+        <nav class="sidebar__nav">
+            <div class="nav-section__title">Views</div>
+            <button class="nav-item nav-item--active" data-view="inbox">
+                <svg class="nav-item__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+                    <path
+                        d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+                </svg>
+                <span>Inbox</span>
+                <span class="nav-item__badge" id="badge-inbox">0</span>
+            </button>
+            <button class="nav-item" data-view="today">
+                <svg class="nav-item__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>Today</span>
+                <span class="nav-item__badge" id="badge-today">0</span>
+            </button>
+            <button class="nav-item" data-view="upcoming">
+                <svg class="nav-item__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span>Upcoming</span>
+                <span class="nav-item__badge" id="badge-upcoming">0</span>
+            </button>
+            <button class="nav-item" data-view="completed">
+                <svg class="nav-item__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 11 12 14 22 4" />
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                </svg>
+                <span>Completed</span>
+                <span class="nav-item__badge" id="badge-completed">0</span>
+            </button>
+            <button class="nav-item" data-view="overdue">
+                <svg class="nav-item__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <span>Overdue</span>
+                <span class="nav-item__badge nav-item__badge--danger" id="badge-overdue">0</span>
+            </button>
+        </nav>
+
+        <!-- Projects -->
+        <nav class="sidebar__nav">
+            <div class="nav-section__title">
+                Projects
+                <button class="nav-section__add" id="add-project-btn" aria-label="Add project">+</button>
+            </div>
+            <div id="project-list"></div>
+        </nav>
+
+        <!-- Tags -->
+        <nav class="sidebar__nav">
+            <div class="nav-section__title">
+                Tags
+                <button class="nav-section__add" id="add-tag-btn" aria-label="Add tag">+</button>
+            </div>
+            <div id="tag-list"></div>
+        </nav>
+
+        <!-- Sidebar bottom -->
+        <div class="sidebar__bottom">
+            <button class="sidebar__action-btn" id="stats-btn" aria-label="Statistics">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10" />
+                    <line x1="12" y1="20" x2="12" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+                <span>Statistics</span>
+            </button>
+            <button class="sidebar__action-btn" id="export-btn" aria-label="Export">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                <span>Export</span>
+            </button>
+            <button class="sidebar__action-btn" id="theme-toggle-btn" aria-label="Toggle theme">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" id="theme-icon">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+                <span id="theme-label">Light Mode</span>
+            </button>
+            <button class="sidebar__action-btn" id="shortcuts-btn" aria-label="Keyboard shortcuts">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <line x1="6" y1="8" x2="6.01" y2="8" />
+                    <line x1="10" y1="8" x2="10.01" y2="8" />
+                    <line x1="14" y1="8" x2="14.01" y2="8" />
+                    <line x1="18" y1="8" x2="18.01" y2="8" />
+                    <line x1="6" y1="12" x2="6.01" y2="12" />
+                    <line x1="18" y1="12" x2="18.01" y2="12" />
+                    <line x1="8" y1="16" x2="16" y2="16" />
+                </svg>
+                <span>Shortcuts</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ====== MAIN ====== -->
+    <main class="main" id="main">
+        <!-- Top bar -->
+        <header class="topbar">
+            <button class="topbar__menu-btn" id="mobile-menu-btn" aria-label="Menu">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round">
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+            </button>
+            <h2 class="topbar__title" id="view-title">Inbox</h2>
+            <div class="topbar__progress">
+                <div class="progress-bar">
+                    <div class="progress-bar__fill" id="progress-fill"></div>
+                </div>
+                <span class="progress-bar__label" id="progress-label">0%</span>
+            </div>
+            <div class="topbar__actions">
+                <div class="search-box" id="search-box">
+                    <svg class="search-box__icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input type="text" id="search-input" class="search-box__input" placeholder="Search tasks… ( / )"
+                        autocomplete="off" />
+                </div>
+                <select id="sort-select" class="sort-select" aria-label="Sort tasks">
+                    <option value="date">Sort: Date</option>
+                    <option value="priority">Sort: Priority</option>
+                    <option value="alpha">Sort: A-Z</option>
+                    <option value="created">Sort: Created</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Task input -->
+        <div class="task-input glass-card" id="task-input-area">
+            <div class="task-input__row">
+                <input type="text" id="new-task-input" class="task-input__field" placeholder="Add a task… (N)"
+                    autocomplete="off" maxlength="300" />
+                <button class="task-input__add-btn" id="add-task-btn" aria-label="Add task">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="task-input__options">
+                <input type="date" id="new-task-date" class="task-input__date" />
+                <select id="new-task-priority" class="task-input__priority" aria-label="Priority">
+                    <option value="4">P4 Low</option>
+                    <option value="3">P3 Medium</option>
+                    <option value="2">P2 High</option>
+                    <option value="1">P1 Urgent</option>
+                </select>
+                <select id="new-task-project" class="task-input__project" aria-label="Project">
+                    <option value="inbox">Inbox</option>
+                </select>
+                <button class="task-input__star-btn" id="new-task-star" aria-label="Star task">☆</button>
+            </div>
+        </div>
+
+        <!-- Task list -->
+        <div id="task-container" class="task-container"></div>
+
+        <!-- Empty state -->
+        <div id="empty-state" class="empty-state hidden">
+            <svg class="empty-state__icon" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+            <p class="empty-state__title">All clear!</p>
+            <p class="empty-state__text">No tasks here. Add one above or switch views.</p>
+        </div>
+    </main>
+
+    <!-- ====== POMODORO WIDGET ====== -->
+    <div class="pomodoro" id="pomodoro">
+        <button class="pomodoro__toggle" id="pomodoro-toggle" aria-label="Toggle Pomodoro timer">🍅</button>
+        <div class="pomodoro__panel hidden" id="pomodoro-panel">
+            <div class="pomodoro__display" id="pomodoro-display">25:00</div>
+            <div class="pomodoro__controls">
+                <button class="pomodoro__btn" id="pomodoro-start">Start</button>
+                <button class="pomodoro__btn" id="pomodoro-reset">Reset</button>
+            </div>
+            <div class="pomodoro__modes">
+                <button class="pomodoro__mode pomodoro__mode--active" data-minutes="25">Focus</button>
+                <button class="pomodoro__mode" data-minutes="5">Short</button>
+                <button class="pomodoro__mode" data-minutes="15">Long</button>
+            </div>
+            <div class="pomodoro__sessions">Sessions: <span id="pomodoro-sessions">0</span></div>
+        </div>
+    </div>
+
+    <!-- ====== TASK DETAIL MODAL ====== -->
+    <div class="modal-overlay hidden" id="task-modal-overlay">
+        <div class="modal task-modal" id="task-modal">
+            <div class="modal__header">
+                <h3 class="modal__title">Task Details</h3>
+                <button class="modal__close" id="task-modal-close" aria-label="Close">×</button>
+            </div>
+            <div class="modal__body">
+                <input type="text" id="detail-title" class="detail-field detail-field--title" placeholder="Task title"
+                    maxlength="300" />
+                <textarea id="detail-notes" class="detail-field detail-field--notes"
+                    placeholder="Add notes or description…" rows="4"></textarea>
+                <div class="detail-row">
+                    <label>Date</label>
+                    <input type="date" id="detail-date" class="detail-input" />
+                </div>
+                <div class="detail-row">
+                    <label>Priority</label>
+                    <select id="detail-priority" class="detail-input">
+                        <option value="4">P4 Low</option>
+                        <option value="3">P3 Medium</option>
+                        <option value="2">P2 High</option>
+                        <option value="1">P1 Urgent</option>
+                    </select>
+                </div>
+                <div class="detail-row">
+                    <label>Project</label>
+                    <select id="detail-project" class="detail-input"></select>
+                </div>
+                <div class="detail-row">
+                    <label>Tags</label>
+                    <div id="detail-tags" class="detail-tags"></div>
+                </div>
+                <div class="detail-row">
+                    <label>Recurring</label>
+                    <select id="detail-recurring" class="detail-input">
+                        <option value="">None</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                </div>
+                <!-- Subtasks -->
+                <div class="detail-subtasks">
+                    <div class="detail-subtasks__header">
+                        <label>Subtasks</label>
+                        <button class="detail-subtasks__add" id="add-subtask-btn">+ Add</button>
+                    </div>
+                    <ul id="subtask-list" class="subtask-list"></ul>
+                </div>
+            </div>
+            <div class="modal__footer">
+                <button class="btn btn--danger" id="detail-delete-btn">Delete Task</button>
+                <button class="btn btn--primary" id="detail-save-btn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== STATS MODAL ====== -->
+    <div class="modal-overlay hidden" id="stats-modal-overlay">
+        <div class="modal stats-modal" id="stats-modal">
+            <div class="modal__header">
+                <h3 class="modal__title">📊 Statistics</h3>
+                <button class="modal__close" id="stats-modal-close" aria-label="Close">×</button>
+            </div>
+            <div class="modal__body">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card__value" id="stat-total">0</div>
+                        <div class="stat-card__label">Total Tasks</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__value" id="stat-completed">0</div>
+                        <div class="stat-card__label">Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__value" id="stat-active">0</div>
+                        <div class="stat-card__label">Active</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__value" id="stat-overdue">0</div>
+                        <div class="stat-card__label">Overdue</div>
+                    </div>
+                </div>
+                <div class="stats-section">
+                    <h4>Completion Rate</h4>
+                    <div class="stat-bar">
+                        <div class="stat-bar__fill" id="stat-rate-fill"></div>
+                    </div>
+                    <span class="stat-bar__label" id="stat-rate-label">0%</span>
+                </div>
+                <div class="stats-section">
+                    <h4>By Priority</h4>
+                    <div class="priority-stats" id="priority-stats"></div>
+                </div>
+                <div class="stats-section">
+                    <h4>This Week</h4>
+                    <div class="heatmap" id="week-heatmap"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== SHORTCUTS MODAL ====== -->
+    <div class="modal-overlay hidden" id="shortcuts-modal-overlay">
+        <div class="modal shortcuts-modal" id="shortcuts-modal">
+            <div class="modal__header">
+                <h3 class="modal__title">⌨️ Keyboard Shortcuts</h3>
+                <button class="modal__close" id="shortcuts-modal-close" aria-label="Close">×</button>
+            </div>
+            <div class="modal__body">
+                <div class="shortcut-grid">
+                    <div class="shortcut"><kbd>N</kbd><span>New task</span></div>
+                    <div class="shortcut"><kbd>/</kbd><span>Search</span></div>
+                    <div class="shortcut"><kbd>1-4</kbd><span>Set priority</span></div>
+                    <div class="shortcut"><kbd>S</kbd><span>Toggle star</span></div>
+                    <div class="shortcut"><kbd>D</kbd><span>Toggle dark/light</span></div>
+                    <div class="shortcut"><kbd>P</kbd><span>Pomodoro timer</span></div>
+                    <div class="shortcut"><kbd>?</kbd><span>This help</span></div>
+                    <div class="shortcut"><kbd>Esc</kbd><span>Close modal</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== ADD PROJECT MODAL ====== -->
+    <div class="modal-overlay hidden" id="project-modal-overlay">
+        <div class="modal mini-modal" id="project-modal">
+            <div class="modal__header">
+                <h3 class="modal__title">New Project</h3><button class="modal__close"
+                    id="project-modal-close">×</button>
+            </div>
+            <div class="modal__body">
+                <input type="text" id="project-name-input" class="detail-field" placeholder="Project name"
+                    maxlength="50" />
+                <div class="color-picker" id="project-color-picker"></div>
+            </div>
+            <div class="modal__footer"><button class="btn btn--primary" id="save-project-btn">Create</button></div>
+        </div>
+    </div>
+
+    <!-- ====== ADD TAG MODAL ====== -->
+    <div class="modal-overlay hidden" id="tag-modal-overlay">
+        <div class="modal mini-modal" id="tag-modal">
+            <div class="modal__header">
+                <h3 class="modal__title">New Tag</h3><button class="modal__close" id="tag-modal-close">×</button>
+            </div>
+            <div class="modal__body">
+                <input type="text" id="tag-name-input" class="detail-field" placeholder="Tag name" maxlength="30" />
+                <div class="color-picker" id="tag-color-picker"></div>
+            </div>
+            <div class="modal__footer"><button class="btn btn--primary" id="save-tag-btn">Create</button></div>
+        </div>
+    </div>
+
+    <!-- ====== UNDO TOAST ====== -->
+    <div class="undo-toast hidden" id="undo-toast">
+        <span id="undo-toast-msg">Task deleted</span>
+        <button class="undo-toast__btn" id="undo-btn">Undo</button>
+    </div>
+
+    <!-- ====== CONFETTI CANVAS ====== -->
+    <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+
+    <!-- Overlay for mobile sidebar -->
+    <div class="sidebar-overlay hidden" id="sidebar-overlay"></div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
