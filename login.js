@@ -85,6 +85,8 @@ authForm.addEventListener('submit', async (e) => {
         else if (error.code === 'auth/email-already-in-use') msg = 'Email is already in use.';
         else if (error.code === 'auth/weak-password') msg = 'Password should be at least 6 characters.';
         else if (error.code === 'auth/invalid-credential') msg = 'Invalid credentials.';
+        else if (error.code === 'auth/operation-not-allowed') msg = 'Email/Password login is not enabled in Firebase Console.';
+        else msg = 'Error: ' + error.message + ' (' + error.code + ')';
         showError(msg);
     }
 });
@@ -96,7 +98,7 @@ googleBtn.addEventListener('click', async () => {
     } catch (error) {
         console.error(error);
         if (error.code === 'auth/popup-closed-by-user') return;
-        showError('Google sign in failed. Please try again.');
+        showError('Google Error: ' + error.message);
     }
 });
 
