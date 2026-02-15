@@ -2,9 +2,6 @@
 
 A feature-rich, beautiful, and powerful To-Do application built with **Vanilla JavaScript**, **Firebase**, and **Glassmorphism Design**.
 
-![App Screenshot](https://raw.githubusercontent.com/sudhanshusharma0727/ultimate-todo-app/master/screenshot.png)
-*(Note: Add a screenshot called screenshot.png to your repo for this image to show up)*
-
 ## 🚀 Live Demo
 [https://sudhanshusharma0727.github.io/ultimate-todo-app/](https://sudhanshusharma0727.github.io/ultimate-todo-app/)
 
