@@ -23,7 +23,8 @@ import {
     query,
     where,
     onSnapshot,
-    writeBatch
+    writeBatch,
+    deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Your web app's Firebase configuration
@@ -162,9 +163,6 @@ export const deleteTodo = async (uid, todoId) => {
     // Actually, delete() isn't directly on doc(), we need deleteDoc imported or call delete() on the ref if using modular sdk properly
     // Wait, in modular SDK it is: await deleteDoc(doc(db, ...));
 };
-
-// Fix imports for delete
-import { deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Re-implement delete
 export const removeTodo = async (uid, todoId) => {
