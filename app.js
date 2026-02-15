@@ -466,25 +466,36 @@ function createTaskEl(todo) {
 // ============================================================
 //  CRUD
 // ============================================================
-function addTodo() {
-    const text = newTaskInput.value.trim();
-    if (!text) return;
-    const todo = {
-        id: uuid(), text, completed: false,
-        date: newTaskDate.value || isoDate(new Date()),
-        priority: parseInt(newTaskPriority.value) || 4,
-        project: newTaskProject.value || 'inbox',
-        tags: [], subtasks: [], notes: '',
-        starred: newTaskStarBtn.classList.contains('starred'),
-        recurring: '', createdAt: Date.now(),
-    };
+async function addTodo() {
+    try {
+        const text = newTaskInput.value.trim();
+        if (!text) return;
 
-    dbAddTodo(user.uid, todo);
+        if (!user || !user.uid) {
+            alert('Error: You are not logged in!');
+            return;
+        }
 
-    newTaskInput.value = '';
-    newTaskStarBtn.classList.remove('starred');
-    newTaskStarBtn.textContent = '☆';
-    newTaskInput.focus();
+        const todo = {
+            id: uuid(), text, completed: false,
+            date: newTaskDate.value || isoDate(new Date()),
+            priority: parseInt(newTaskPriority.value) || 4,
+            project: newTaskProject.value || 'inbox',
+            tags: [], subtasks: [], notes: '',
+            starred: newTaskStarBtn.classList.contains('starred'),
+            recurring: '', createdAt: Date.now(),
+        };
+
+        await dbAddTodo(user.uid, todo);
+
+        newTaskInput.value = '';
+        newTaskStarBtn.classList.remove('starred');
+        newTaskStarBtn.textContent = '☆';
+        newTaskInput.focus();
+    } catch (e) {
+        console.error(e);
+        alert('Failed to add task: ' + e.message);
+    }
 }
 
 function toggleComplete(id) {
@@ -699,12 +710,17 @@ $('add-project-btn').addEventListener('click', () => {
     $('project-name-input').focus();
 });
 
-$('save-project-btn').addEventListener('click', () => {
-    const name = $('project-name-input').value.trim();
-    if (!name) return;
-    projects.push({ id: 'proj-' + uuid(), name, color: getSelectedColor('project-color-picker') || COLOR_PALETTE[0] });
-    updateUserData(user.uid, { projects });
-    hideModal('project-modal-overlay');
+$('save-project-btn').addEventListener('click', async () => {
+    try {
+        const name = $('project-name-input').value.trim();
+        if (!name) return;
+        projects.push({ id: 'proj-' + uuid(), name, color: getSelectedColor('project-color-picker') || COLOR_PALETTE[0] });
+        await updateUserData(user.uid, { projects });
+        hideModal('project-modal-overlay');
+    } catch (e) {
+        console.error(e);
+        alert('Failed to save project: ' + e.message);
+    }
 });
 
 // ============================================================
@@ -742,12 +758,17 @@ $('add-tag-btn').addEventListener('click', () => {
     $('tag-name-input').focus();
 });
 
-$('save-tag-btn').addEventListener('click', () => {
-    const name = $('tag-name-input').value.trim();
-    if (!name) return;
-    tags.push({ id: 'tag-' + uuid(), name, color: getSelectedColor('tag-color-picker') || COLOR_PALETTE[0] });
-    updateUserData(user.uid, { tags });
-    hideModal('tag-modal-overlay');
+$('save-tag-btn').addEventListener('click', async () => {
+    try {
+        const name = $('tag-name-input').value.trim();
+        if (!name) return;
+        tags.push({ id: 'tag-' + uuid(), name, color: getSelectedColor('tag-color-picker') || COLOR_PALETTE[0] });
+        await updateUserData(user.uid, { tags });
+        hideModal('tag-modal-overlay');
+    } catch (e) {
+        console.error(e);
+        alert('Failed to save tag: ' + e.message);
+    }
 });
 
 // ============================================================
