@@ -81,7 +81,7 @@ let unsubscribeUser = null;
 // ============================================================
 subscribeToAuthChanges(async (currentUser) => {
     if (!currentUser) {
-        window.location.href = 'login.html';
+        window.location.replace('login.html');
         return;
     }
 
@@ -137,7 +137,7 @@ function updateUserProfileUI() {
 $('logout-btn').addEventListener('click', async () => {
     try {
         await logout();
-        window.location.href = 'login.html';
+        window.location.replace('login.html');
     } catch (e) {
         console.error('Logout failed', e);
     }

@@ -19,7 +19,7 @@ let isLogin = true;
 // Check if already logged in
 subscribeToAuthChanges((user) => {
     if (user) {
-        window.location.href = 'index.html';
+        window.location.replace('index.html');
     }
 });
 
