@@ -1,9 +1,4 @@
 # ========================
-# Firebase Configuration
-# ========================
-firebase-config.js
-
-# ========================
 # OS & Editor Files
 # ========================
 .DS_Store
