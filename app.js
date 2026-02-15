@@ -84,10 +84,14 @@ subscribeToAuthChanges(async (currentUser) => {
 });
 
 function updateUserProfileUI() {
-    $('user-name').textContent = user.displayName || 'User';
+    const name = user.displayName || user.email.split('@')[0];
+    $('user-name').textContent = name;
     $('user-email').textContent = user.email;
-    if (user.photoURL) $('user-avatar').src = user.photoURL;
-    else $('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&background=random`;
+    if (user.photoURL) {
+        $('user-avatar').src = user.photoURL;
+    } else {
+        $('user-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&color=fff&bold=true`;
+    }
 }
 
 $('logout-btn').addEventListener('click', async () => {
