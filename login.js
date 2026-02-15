@@ -97,7 +97,7 @@ googleBtn.addEventListener('click', async () => {
         // Redirect handled by onAuthStateChanged
     } catch (error) {
         console.error(error);
-        if (error.code === 'auth/popup-closed-by-user') return;
+        if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') return;
         showError('Google Error: ' + error.message);
     }
 });

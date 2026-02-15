@@ -29,7 +29,7 @@ import {
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyCkWfBSHPq4XN3Hz4RdDpE9SgKS2QpTyQQ",
+    apiKey: "AIzaSyCJ9MEfKaLaQr-CWxQTwZf0MvVNJd_XYg4",
     authDomain: "ultimatetodo-577e1.firebaseapp.com",
     projectId: "ultimatetodo-577e1",
     storageBucket: "ultimatetodo-577e1.firebasestorage.app",
