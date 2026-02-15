@@ -29,13 +29,13 @@ import {
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyCJ9MEfKaLaQr-CWxQTwZf0MvVNJd_XYg4",
+    apiKey: "AIzaSyAKjChdyguDiR_mPNDf3wDeyw35dhsfaCo",
     authDomain: "ultimatetodo-577e1.firebaseapp.com",
     projectId: "ultimatetodo-577e1",
     storageBucket: "ultimatetodo-577e1.firebasestorage.app",
     messagingSenderId: "817153725734",
-    appId: "1:817153725734:web:a1f833f5ba84188a181de7",
-    measurementId: "G-KS1VV2YVYE"
+    appId: "1:817153725734:web:74e759d47c713e2b181de7",
+    measurementId: "G-J8ZR21BKVH"
 };
 
 // Initialize Firebase
