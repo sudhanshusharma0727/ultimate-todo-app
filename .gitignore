@@ -1,0 +1,40 @@
+# ========================
+# Firebase Configuration
+# ========================
+firebase-config.js
+
+# ========================
+# OS & Editor Files
+# ========================
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# VS Code
+.vscode/
+
+# JetBrains IDEs
+.idea/
+
+# ========================
+# Dependencies
+# ========================
+node_modules/
+package-lock.json
+
+# ========================
+# Environment & Secrets
+# ========================
+.env
+.env.*
+*.local
+
+# ========================
+# Build & Logs
+# ========================
+dist/
+build/
+*.log

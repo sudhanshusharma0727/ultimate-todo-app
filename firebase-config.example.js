@@ -1,3 +1,13 @@
+// ============================================================
+//  Firebase Configuration Template
+//  ============================================================
+//  INSTRUCTIONS:
+//  1. Copy this file and rename to: firebase-config.js
+//  2. Replace the placeholder values below with your Firebase project credentials
+//  3. Get your credentials from: https://console.firebase.google.com → Project Settings → Web App
+//  4. NEVER commit firebase-config.js to git (it's in .gitignore)
+// ============================================================
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
@@ -28,14 +38,15 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Your web app's Firebase configuration
+// ⚠️ Replace these placeholder values with your own Firebase credentials
 const firebaseConfig = {
-    apiKey: "AIzaSyCXVvSuqdgwu1kf28iL97jl5xnyeT4yn_0",
-    authDomain: "ultimatetodo-577e1.firebaseapp.com",
-    projectId: "ultimatetodo-577e1",
-    storageBucket: "ultimatetodo-577e1.firebasestorage.app",
-    messagingSenderId: "817153725734",
-    appId: "1:817153725734:web:a1f833f5ba84188a181de7",
-    measurementId: "G-KS1VV2YVYE"
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID",
+    measurementId: "YOUR_MEASUREMENT_ID"
 };
 
 // Initialize Firebase
@@ -97,11 +108,6 @@ export const subscribeToAuthChanges = (callback) => {
 //  FIRESTORE FUNCTIONS
 // ============================================================
 
-// Save entire state (for simple migration/sync)
-// In a real app we'd save items individually, but to keep existing architecture
-// we'll sync the big JSON blobs for now, or preferably move to collection-based.
-// Let's use collection-based for better scalability and multi-device sync.
-
 export const getUserRef = (uid) => doc(db, "users", uid);
 
 // Initialize user document if not exists
@@ -131,10 +137,6 @@ export const initUser = async (user) => {
                 { id: 'tag-bug', name: 'Bug', color: '#F97316' }
             ]
         });
-
-        // Also create a subcollection for todos if we want, or just keep them in a top-level collection with userId
-        // For simplicity with existing app structure, let's keep projects/tags in the user doc
-        // and put todos in a subcollection 'todos'
     }
 };
 
@@ -159,9 +161,7 @@ export const updateTodo = async (uid, todo) => {
 };
 
 export const deleteTodo = async (uid, todoId) => {
-    await doc(db, "users", uid, "todos", todoId).delete(); // Note: delete() is a method on DocumentReference
-    // Actually, delete() isn't directly on doc(), we need deleteDoc imported or call delete() on the ref if using modular sdk properly
-    // Wait, in modular SDK it is: await deleteDoc(doc(db, ...));
+    await doc(db, "users", uid, "todos", todoId).delete();
 };
 
 // Re-implement delete

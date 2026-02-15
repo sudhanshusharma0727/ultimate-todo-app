@@ -55,27 +55,35 @@ If you want to run this locally or fork it:
     *   Go to [Firebase Console](https://console.firebase.google.com).
     *   Create a new project.
     *   Enable **Authentication** (Google & Email/Password).
-    *   Enable **Cloud Firestore** (Start in Test Mode).
+    *   Enable **Cloud Firestore**.
+    *   **Deploy Security Rules:** Copy the rules from `firestore.rules.example` and paste them in Firebase Console → Firestore → Rules → Publish.
     *   Create a Web App in Project Settings and get your config.
 
 3.  **Configure the App:**
-    *   Open `firebase-config.js`.
-    *   Replace the `firebaseConfig` object with your own credentials:
-        ```javascript
-        const firebaseConfig = {
-          apiKey: "YOUR_API_KEY",
-          authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-          projectId: "YOUR_PROJECT_ID",
-          storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
-          messagingSenderId: "YOUR_SENDER_ID",
-          appId: "YOUR_APP_ID"
-        };
+    *   Copy the example config file:
+        ```bash
+        cp firebase-config.example.js firebase-config.js
         ```
+    *   Open `firebase-config.js` and replace the placeholder values with your Firebase credentials.
+    *   **⚠️ Never commit `firebase-config.js` to git** — it's already in `.gitignore`.
 
 4.  **Run Locally:**
     *   Since the app uses ES Modules, you need a local server.
     *   Using Python: `python -m http.server`
     *   Using Node/VS Code: Use the "Live Server" extension.
+
+## 🔒 Security
+
+### Firebase API Key
+The Firebase API key is kept out of version control via `.gitignore`. While Firebase web API keys are designed to be public (security comes from Firestore rules and Auth restrictions), keeping them out of git is best practice.
+
+**Recommended:** Restrict your API key in [Google Cloud Console](https://console.cloud.google.com/apis/credentials) to only allow requests from your domain.
+
+### Firestore Security Rules
+**Do NOT use Test Mode in production.** Deploy the rules from `firestore.rules.example` to ensure:
+*   Users can only read/write their own data
+*   Unauthenticated users have zero access
+*   Todo subcollection is scoped per user
 
 ## 📦 Deployment
 
@@ -84,7 +92,9 @@ This project is configured to deploy to **GitHub Pages** automatically via GitHu
 1.  Push your code to GitHub.
 2.  Go to Settings > Pages.
 3.  The included `.github/workflows/deploy.yml` handling the build process will automatically deploy changes from the `master` (or `main`) branch.
+4.  Make sure `firebase-config.js` is **not** committed — the deployed site on GitHub Pages will need its own config strategy (see Security section).
 
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
+
