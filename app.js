@@ -21,6 +21,45 @@ const COLOR_PALETTE = [
 ];
 
 // ============================================================
+//  HELPERS & DOM REFS (Moved up to prevent ReferenceError)
+// ============================================================
+const $ = (id) => document.getElementById(id);
+const $$ = (sel) => document.querySelectorAll(sel);
+
+function uuid() {
+    return crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
+}
+
+function isoDate(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function parseDateParts(s) {
+    const p = s.split('-');
+    return { year: +p[0], month: +p[1], day: +p[2] };
+}
+
+function isToday(dateStr) { return dateStr === isoDate(new Date()); }
+function isOverdue(dateStr) { return dateStr && !isToday(dateStr) && dateStr < isoDate(new Date()); }
+
+function isUpcoming(dateStr) {
+    const today = new Date();
+    const target = new Date(dateStr + 'T00:00:00');
+    return (target - today) / 864e5 >= 0 && (target - today) / 864e5 <= 7;
+}
+
+function formatRelativeDate(dateStr) {
+    if (!dateStr) return '';
+    if (isToday(dateStr)) return 'Today';
+    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+    if (dateStr === isoDate(tomorrow)) return 'Tomorrow';
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+    if (dateStr === isoDate(yesterday)) return 'Yesterday';
+    const p = parseDateParts(dateStr);
+    return MONTH_NAMES[p.month - 1].slice(0, 3) + ' ' + p.day;
+}
+
+// ============================================================
 //  STATE
 // ============================================================
 let user = null;
@@ -47,6 +86,7 @@ subscribeToAuthChanges(async (currentUser) => {
     }
 
     user = currentUser;
+    // DOM elements must be available here
     updateUserProfileUI();
 
     // Initialize user data if needed
@@ -104,10 +144,11 @@ $('logout-btn').addEventListener('click', async () => {
 });
 
 // ============================================================
-//  DOM REFS
+//  DOM REFS (Initialized after DOM is ready)
 // ============================================================
-const $ = (id) => document.getElementById(id);
-const $$ = (sel) => document.querySelectorAll(sel);
+// Note: $ and $$ are defined above now.
+// We can cache these elements, but we must ensure DOM is ready.
+// Since script is type="module", it defers by default, so DOM should be ready.
 
 const sidebar = $('sidebar');
 const sidebarOverlay = $('sidebar-overlay');
@@ -124,6 +165,7 @@ const newTaskPriority = $('new-task-priority');
 const newTaskProject = $('new-task-project');
 const newTaskStarBtn = $('new-task-star');
 const addTaskBtn = $('add-task-btn');
+// navItems is a NodeList, needs to be re-queried if dynamic, but here it's static for sidebar
 const navItems = $$('.nav-item');
 const projectList = $('project-list');
 const tagList = $('tag-list');
@@ -133,43 +175,7 @@ const undoBtn = $('undo-btn');
 const confettiCanvas = $('confetti-canvas');
 
 // Set defaults
-newTaskDate.value = isoDate(new Date());
-
-// ============================================================
-//  HELPERS
-// ============================================================
-function uuid() {
-    return crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
-}
-
-function isoDate(d) {
-    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-}
-
-function parseDateParts(s) {
-    const p = s.split('-');
-    return { year: +p[0], month: +p[1], day: +p[2] };
-}
-
-function isToday(dateStr) { return dateStr === isoDate(new Date()); }
-function isOverdue(dateStr) { return dateStr && !isToday(dateStr) && dateStr < isoDate(new Date()); }
-
-function isUpcoming(dateStr) {
-    const today = new Date();
-    const target = new Date(dateStr + 'T00:00:00');
-    return (target - today) / 864e5 >= 0 && (target - today) / 864e5 <= 7;
-}
-
-function formatRelativeDate(dateStr) {
-    if (!dateStr) return '';
-    if (isToday(dateStr)) return 'Today';
-    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
-    if (dateStr === isoDate(tomorrow)) return 'Tomorrow';
-    const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-    if (dateStr === isoDate(yesterday)) return 'Yesterday';
-    const p = parseDateParts(dateStr);
-    return MONTH_NAMES[p.month - 1].slice(0, 3) + ' ' + p.day;
-}
+if (newTaskDate) newTaskDate.value = isoDate(new Date());
 
 function saveSettings() {
     if (user) {
@@ -1073,5 +1079,3 @@ newTaskStarBtn.addEventListener('click', () => {
     newTaskStarBtn.classList.toggle('starred');
     newTaskStarBtn.textContent = newTaskStarBtn.classList.contains('starred') ? '★' : '☆';
 });
-
-// Note: No explicit render() at end, it's called in auth callback when data comes in
